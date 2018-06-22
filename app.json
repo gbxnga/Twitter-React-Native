@@ -1,0 +1,16 @@
+
+
+{
+  "expo": {
+    "name": "TwitterReactNative",
+    "description": "your app desc",
+
+    "ios": {
+      "supportsTablet": true
+    },
+
+    "android": {
+      "package": "com.betagrades.ng"
+    }
+  }
+}
