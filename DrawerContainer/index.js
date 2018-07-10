@@ -150,7 +150,7 @@ export default class DrawerContainer extends React.Component {
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('DrawerToggle')} style={styles.list}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Site')} style={styles.list}>
             <View>
               <Ionicons
                 style={{
@@ -177,7 +177,7 @@ export default class DrawerContainer extends React.Component {
                 name='bookmark-o'
                 size={20}
                 color="rgb(136, 153, 166)"/>
-              <Text onPress={() => navigation.navigate('Other')} style={styles.text}>
+              <Text onPress={() => navigation.navigate('AnimationPage')} style={styles.text}>
                 Bookmarks
               </Text>
             </View>

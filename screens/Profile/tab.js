@@ -10,8 +10,11 @@ class ProfileScreenDetails extends Component {
     constructor(){
       super()
       this.state = {
-        loading: true
+        loading: true,
+        val:0,
+
       }
+      this.handleScroll = this.handleScroll.bind(this)
     }
 
     componentDidMount(){
@@ -19,14 +22,17 @@ class ProfileScreenDetails extends Component {
       this.setState({loading:false})
   
     }
+    handleScroll(event) {
+      this.setState({val:event.nativeEvent.contentOffset.y})
+     }
   
     render(){
   
-      const {loading} = this.state
+      const {loading,val} = this.state
   
   
       return (
-        <ScrollView style={{width:"100%", borderColor:"black", borderWidth:0.8, marginBottom:0, backgroundColor:"rgb(36, 52, 71)"}}>        
+        <ScrollView onScroll={this.handleScroll} scrollEnabled={true} style={{marginBottom:val,width:"100%", borderColor:"black", borderWidth:0.8, marginBottom:0, backgroundColor:"rgb(36, 52, 71)"}}>        
           { loading ?  <Text>Loading Tweets</Text> : <TweetList navigation={this.props.navigation} number={20}/> }
         </ScrollView>
       )

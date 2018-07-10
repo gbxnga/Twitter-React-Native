@@ -8,12 +8,14 @@ import {
   TouchableHighlight,
   TouchableOpacity,
   ToastAndroid,
-  ScrollView, TextInput
+  ScrollView, TextInput, ToolbarAndroid
 } from 'react-native'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+
+import ReplyComponent from './ReplyComponent'
 
 import TweetList from './list'
 export default class BoldTweet extends React.Component {
@@ -152,18 +154,7 @@ export default class BoldTweet extends React.Component {
             <TweetList navigation={navigation} number={5}/>
         </ScrollView>
     
-        <View style={{padding:5,width:"100%", elevation:8, height:50, backgroundColor:"rgb(27, 42, 51)"}}>
-            <View style={{flex:1, marginLeft:2.5, marginRight:2.5}} >        
-                <TextInput
-                    multiline={true}
-                    numberOfLines={0}
-                    style={{ height:40,width:'100%',marginTop:0,color:'white', borderBottomColor:'rgb(136, 153, 166)', borderBottomWidth:0.7}}
-
-                    placeholder="Tweet your reply"
-                    placeholderTextColor="rgb(136, 153, 166)"
-                    />
-            </View>
-        </View>
+        <ReplyComponent/>
     </View>
     )
   }

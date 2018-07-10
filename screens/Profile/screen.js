@@ -1,5 +1,5 @@
 import React from 'react'
-import {Image, StyleSheet, View, Text, StatusBar, ScrollView} from 'react-native'
+import {Image, StyleSheet, View, Text, StatusBar, ScrollView, PanResponder, Animated} from 'react-native'
 import {Button, Card} from 'react-native-elements';
 import {StackNavigator, NavigationActions} from 'react-navigation'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -11,10 +11,71 @@ const userImage = {uri : 'https://pbs.twimg.com/profile_images/95190366480905011
 const userBannerImage = {uri : 'https://pbs.twimg.com/profile_banners/320086859/1518817459/1500x500'}
 
 
-export default ProfileScreen = ({navigation}) => {
+export default class ProfileScreen extends React.Component {
+
+  constructor(props){
+
+    super(props)
+    this.state={
+      pan: new Animated.ValueXY()
+    }
+    this._panResponder = PanResponder.create({
+      // Ask to be the responder:
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+
+      onPanResponderGrant: (evt, gestureState) => {
+        // The gesture has started. Show visual feedback so the user knows
+        // what is happening!
+        this.state.pan.setOffset({
+          x: this.state.pan.x._value,
+          y: this.state.pan.y._value
+        });
+        this.state.pan.setValue({ x: 0, y: 0 });
+        this.setState({ text: "Oti ya o!" });
+
+        // gestureState.d{x,y} will be set to zero now
+      },
+      onPanResponderMove:
+        // The most recent move distance is gestureState.move{X,Y}
+
+        // The accumulated gesture distance since becoming responder is
+        // gestureState.d{x,y}
+        Animated.event([null, { dx: this.state.pan.x, dy: this.state.pan.y }]),
+      onPanResponderTerminationRequest: (evt, gestureState) => true,
+      onPanResponderRelease: (evt, gestureState) => {
+        // The user has released all touches while this view is the
+        // responder. This typically means a gesture has succeeded
+        // Flatten the offset to avoid erratic behavior
+        this.state.pan.flattenOffset();
+      },
+      onPanResponderTerminate: (evt, gestureState) => {
+        // Another component has become the responder, so this gesture
+        // should be cancelled
+      },
+      onShouldBlockNativeResponder: (evt, gestureState) => {
+        // Returns whether this component should block native components from becoming the JS
+        // responder. Returns true by default. Is currently only supported on android.
+        return true;
+      }
+    });
+  }
+
+  render(){
+
+        // Destructure the value of pan from the state
+        let { pan } = this.state;
+
+        // Calculate the x and y transform from the pan value
+        let [translateX, translateY] = [pan.x, pan.y];
+    
+        // Calculate the transform property and set it as a value for our style which we add below to the Animated.View component
+        let imageStyle = { transform: [{ translateX }, { translateY }] };
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[{position:"absolute",width:"100%",height:"100%", borderColor:"red", borderWidth:4},styles.container, imageStyle]} {...this._panResponder.panHandlers}>
       <View style={{borderColor:"red", borderWidth:0}}>
 
         <View style={{flex:0.6,borderColor:"yellow", borderWidth:0, }}>
@@ -106,10 +167,11 @@ export default ProfileScreen = ({navigation}) => {
             <ProfileScreenTab/>
         </View>
       </View>
-      </View>
+      </Animated.View>
       
 
   )
+  }
 }
 
 const styles = StyleSheet.create({

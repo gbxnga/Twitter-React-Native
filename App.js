@@ -2,12 +2,15 @@
 import React, { Component } from 'react';
 import {
   Platform,
+  Animated,
+  Easing,
+  Dimensions,
   StyleSheet,
   Text,
   View,
   AppRegistry,
   TextInput,
-  YellowBox,TouchableOpacity, Image, TouchableHighlight, TouchableNativeFeedback, ScrollView, BackHandler, AlertAndroid
+  YellowBox,TouchableOpacity, Image, TouchableHighlight, TouchableNativeFeedback, ScrollView, BackHandler, AlertAndroid, WebView, PanResponder
 } from 'react-native';
 import {createTabNavigator,createSwitchNavigator, NavigationActions, StackNavigator, SwitchNavigator, createTopTabNavigator, TabNavigator, createBottomTabNavigator, createStackNavigator, DrawerNavigator, createDrawerNavigator} from 'react-navigation'
 import { Button, Card } from 'react-native-elements';
@@ -33,6 +36,7 @@ import BoldTweet from './screens/Tweet/bold'
 import ProfileStack from './screens/Profile/stack'
 
 import Orientation from 'react-native-orientation'
+import Notification from './screens/Notification'
 
 
 const instructions = Platform.select({
@@ -373,10 +377,116 @@ const HomeWithCreateTweetScreenStack = createStackNavigator({
   },
 
 })
+const Site = createStackNavigator({
+  Site:{
+    screen: ({navigation}) => <WebView source={{uri:"https://gbengaoni.com"}} style={{flex:1}}/>,
+    navigationOptions: ({navigation}) =>( {  
+      title:"Site"
+    }),
+    headerLeft: () => (
+      <Button
+      icon={{name: 'clear', type: 'material', style: {color:"rgb(29, 161, 242)", size:30} }}
+      buttonStyle={{backgroundColor:'transparent', }}
+      onPress={() => navigation.dispatch(NavigationActions.back())}
+      />
+),
+  },
+
+})
+class ExampleComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: "No movement",
+      bottom: 0,
+      response: "",
+      pan: new Animated.ValueXY()
+    };
+    this._panResponder = PanResponder.create({
+      // Ask to be the responder:
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+
+      onPanResponderGrant: (evt, gestureState) => {
+        // The gesture has started. Show visual feedback so the user knows
+        // what is happening!
+        this.state.pan.setOffset({
+          x: this.state.pan.x._value,
+          y: this.state.pan.y._value
+        });
+        this.state.pan.setValue({ x: 0, y: 0 });
+        this.setState({ text: "Oti ya o!" });
+
+        // gestureState.d{x,y} will be set to zero now
+      },
+      onPanResponderMove:
+        // The most recent move distance is gestureState.move{X,Y}
+
+        // The accumulated gesture distance since becoming responder is
+        // gestureState.d{x,y}
+        Animated.event([null, { dx: this.state.pan.x, dy: this.state.pan.y }]),
+      onPanResponderTerminationRequest: (evt, gestureState) => true,
+      onPanResponderRelease: (evt, gestureState) => {
+        // The user has released all touches while this view is the
+        // responder. This typically means a gesture has succeeded
+        // Flatten the offset to avoid erratic behavior
+        this.state.pan.flattenOffset();
+        this.setState({ text: "No gestures ", bottom: 0 });
+      },
+      onPanResponderTerminate: (evt, gestureState) => {
+        // Another component has become the responder, so this gesture
+        // should be cancelled
+      },
+      onShouldBlockNativeResponder: (evt, gestureState) => {
+        // Returns whether this component should block native components from becoming the JS
+        // responder. Returns true by default. Is currently only supported on android.
+        return true;
+      }
+    });
+  }
+
+  render() {
+    // Destructure the value of pan from the state
+    let { pan } = this.state;
+
+    // Calculate the x and y transform from the pan value
+    let [translateX, translateY] = [pan.x, pan.y];
+
+    // Calculate the transform property and set it as a value for our style which we add below to the Animated.View component
+    let imageStyle = { transform: [{ translateX }, { translateY }] };
+
+    return (
+      <View style={{ flex: 1 }}>
+        <Animated.View
+          style={[
+            {
+              flex: 1,
+              borderColor: "red",
+              borderWidth: 2,
+              height: 300,
+              width: "100%",
+              position: "absolute",
+              bottom: this.state.bottom
+            },
+            imageStyle
+          ]}
+          {...this._panResponder.panHandlers}
+        >
+          <Text>{this.state.text}</Text>
+          <Text>{this.state.response}</Text>
+        </Animated.View>
+      </View>
+    );
+  }
+}
 const  AppStack = createDrawerNavigator(
   { 
     Home: HomeWithCreateTweetScreenStack,
-    Profile: ProfileStack
+    Profile: ProfileStack,
+    Site: Site,
+    AnimationPage: ExampleComponent,
   },
   {
     contentComponent: ({navigation}) => <DrawerContainer  navigation={navigation}/>
@@ -396,7 +506,9 @@ export default class MainApp extends React.Component{
   constructor(){
     super()
     this.state = {
-      orientation: null
+      orientation: null,
+      notify: false,
+      message: 'Hello, Awayhu ?'
     }
   }
 
@@ -414,13 +526,73 @@ export default class MainApp extends React.Component{
     //this.setState({orientation})
     //AlertAndroid.alert(orientation)
   }
+  onToggleNotification = () => {
+    
+    this.setState({
+      notify: !this.state.notify
+    })
+
+  }
 
   render(){
+    const {message} = this.props;
+    const notify = this.state.notify ?
+    <Notification
+      autohide
+      message={message}
+      onClose={this.onToggleNotification}
+      />
+    : null
 
     return (
-      <AppNavigator/>
+      <View style={{flex:1}}>
+      <AppNavigator toggleNotification={this.onToggleNotification}/>
+      {notify}
+      </View>
     )
   }
+}
+
+const {width, height} = Dimensions.get('window')
+const cloudImage = require('./assets/images/avatar.png');
+const imageWidth = 80
+
+class SimpleAnimations extends React.Component{
+  constructor(){
+    super()
+
+  }
+
+  componentWillMount(){
+    this.animatedValue = new Animated.Value();
+
+  }
+  componentDidMount(){
+    this.startAnimation()
+  }
+  startAnimation(){
+    this.animatedValue.setValue(width); // resetting the initial value every time we call this method
+    Animated.timing(
+      this.animatedValue,
+      {
+        toValue: -imageWidth,
+        duration: 4000,
+        easing: Easing.linear
+      }
+    ).start(()=> this.startAnimation()); // we created a loop: when image reaches the end, the animation starts again
+
+  }
+  render(){
+
+    return(
+      <Animated.Image
+        style={ {left: this.animatedValue, position:"absolute",top:height/3,width:imageWidth, height:imageWidth}}
+        source={cloudImage}
+      />
+    )
+
+  }
+
 }
 
 
