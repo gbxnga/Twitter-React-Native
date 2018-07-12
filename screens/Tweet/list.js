@@ -13,6 +13,7 @@ export default class TweetsList extends Component  {
             data: false
         }
         this.renderRow = this.renderRow.bind(this)
+        this.handleScroll = this.handleScroll.bind(this)
     }
     componentDidMount(){
         let ds = new ListView.DataSource({
@@ -22,7 +23,19 @@ export default class TweetsList extends Component  {
         // simulate remote data fetch by delaying render for 5ms
        setTimeout( () => this.setState({dataSource: ds.cloneWithRows(data), data: true}),
        500)
+
+       console.log(this.props.navigation)
     }
+    handleScroll(event) {
+        //alert('ehykjlhk;lj')
+
+        console.log('child', event.nativeEvent.contentOffset.y);
+        if (event.nativeEvent.contentOffset.y == 0){
+            console.log('youve reachd top sending conrol to arent')
+            this.props.shouldScroll()
+        }
+
+       }
 
     renderRow(record){
 
@@ -40,6 +53,7 @@ export default class TweetsList extends Component  {
              
                 { this.state.data ? 
                     <ListView
+                    
                     dataSource={this.state.dataSource}
                     renderRow={this.renderRow}
                     /> 

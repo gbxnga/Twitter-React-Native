@@ -3,7 +3,7 @@ import {Image, StyleSheet, ScrollView, View, Text} from 'react-native'
 import { Button, Card } from 'react-native-elements';
 import {TabNavigator} from 'react-navigation'
 
-import TweetList from '../Tweet/list'
+import TweetsList from '../Tweet/list'
 
 class ProfileScreenDetails extends Component {
 
@@ -18,6 +18,7 @@ class ProfileScreenDetails extends Component {
     }
 
     componentDidMount(){
+      console.log(this.props)
   
       this.setState({loading:false})
   
@@ -32,16 +33,17 @@ class ProfileScreenDetails extends Component {
   
   
       return (
-        <ScrollView onScroll={this.handleScroll} scrollEnabled={true} style={{marginBottom:val,width:"100%", borderColor:"black", borderWidth:0.8, marginBottom:0, backgroundColor:"rgb(36, 52, 71)"}}>        
-          { loading ?  <Text>Loading Tweets</Text> : <TweetList navigation={this.props.navigation} number={20}/> }
-        </ScrollView>
+        
+        <View  scrollEnabled={true} style={{marginBottom:val,width:"100%", borderColor:"black", borderWidth:0.8, marginBottom:0, backgroundColor:"rgb(36, 52, 71)"}}>        
+          { loading ?  <Text>Loading Tweets</Text> : <TweetsList shouldScroll={this.props.screenProps.shouldScroll} navigation={this.props.navigation} number={20}/> }
+        </View>
       )
     }  
 }
 
 export default ProfileScreenTab =  TabNavigator({
     Tweets: {
-      screen: ProfileScreenDetails, 
+      screen: props => <ProfileScreenDetails {...props}/>, 
       navigationOptions: {
         tabBarLabel: 'Tweets',
       }
