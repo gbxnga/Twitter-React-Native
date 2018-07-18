@@ -14,24 +14,33 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
-//const userImage = require('../../assets/images/avatar.png')
-const userImage = {uri : 'https://pbs.twimg.com/profile_images/951903664809050114/Grfd40ih_400x400.jpg'}
+import randomWords from 'random-words'
 
+
+const userImage = {uri : 'https://pbs.twimg.com/profile_images/951903664809050114/Grfd40ih_400x400.jpg'}
+Array.prototype.random = function () {
+  return this[Math.floor((Math.random()*this.length))];
+}
+String.prototype.capitalizeFirstLetter = function() {
+  return `${this.substr(0,1).toUpperCase()}${this.substr(1)}`;
+}
 export default class Tweet extends React.Component {
 
   constructor(props) {
     super(props)
-    const {tweet, name, handle, time, retweeted, liked} = this.props
+    const {tweet, name, handle, time, retweeted, liked, picture} = this.props
+    const twit = randomWords({min: 18, max: 40}).join(" ");
     this.state = {
+      photo: {uri :  picture.thumbnail},
       touched: false,
-      tweet,
+      tweet: twit,
       retweets:Math.floor((Math.random() * 100) + 1),
       likes:Math.floor((Math.random() * 10) + 1),
-      name,
-      handle,
-      time,
-      retweeted,
-      liked,
+      name: `${name.first.capitalizeFirstLetter()} ${name.last.capitalizeFirstLetter()}`,
+      handle: `@${name.first}`,
+      time: "1hr",
+      retweeted: [true, false].random(),
+      liked: [true, false].random(),
       retweetedBy:["Sandra", "Hannit","Michael", "Jason", "Queen"][Math.floor(Math.random()*["Sandra", "Hannit","Michael", "Jason", "Queen"].length)]
     }
     this.tweetPressed = this
@@ -43,10 +52,8 @@ export default class Tweet extends React.Component {
   }
 
   tweetPressed(pressed = false) {
-    //ToastAndroid.show('Tweet Saved', ToastAndroid.SHORT);
-    this.setState({touched: pressed})
     
-    //if (!pressed) 
+    this.setState({touched: pressed})
   }
 
   retweet(){
@@ -74,7 +81,7 @@ export default class Tweet extends React.Component {
   render() {
 
     const {navigation, thekey, isReply} = this.props
-    const {touched, tweet, retweets, likes, name, handle, time, retweetedBy, retweeted, liked} = this.state
+    const {touched, tweet, retweets, likes, name, handle, time, retweetedBy, retweeted, liked, photo} = this.state
 
 
     return(
@@ -95,7 +102,7 @@ export default class Tweet extends React.Component {
                 
                 onPress={() => navigation.navigate('Profile')}>
                 <Image
-                  source={userImage}
+                  source={photo}
                   style={{
                   width: 50,
                   height: 50,
@@ -110,7 +117,8 @@ export default class Tweet extends React.Component {
               <View style={{flex:1,borderColor:"blue",borderWidth:0,marginBottom:5}}>
                 <Text style={{color:"white", fontWeight:"bold"}}>{name}
                   <Text style={{
-                    color: 'rgb(136, 153, 166)'
+                    color: 'rgb(136, 153, 166)',
+                    marginLeft:5
                   }}>{handle} · {time}</Text>
                 </Text>
               </View>

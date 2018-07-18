@@ -33,6 +33,8 @@ const IMG_HEIGHT = 100;
 const NAVBAR_HEIGHT = 64;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
+import TweetList from '../Tweet/list'
+
 export default class ScrollSwagger extends Component {
   constructor(props) {
     super(props);
@@ -121,138 +123,86 @@ export default class ScrollSwagger extends Component {
       outputRange: ["0deg", "360deg"]
     });
     return (
-      <View style={{ flex: 1, backgroundColor:"rgb(20, 29, 38)" }}>
+      <View style={styles.container}>
 
-<Animated.View style={{flex:0.1,borderColor:"red", borderWidth:0,zIndex:1000000000,            backgroundColor: headColor2,
-            }}>
-  <Button icon={{ name: 'arrow-back', type: 'material', size:30, style: { color: "white", } }}
-          buttonStyle={{ backgroundColor: 'transparent', position: "absolute", top: -5, left: -10, padding:20, paddingLeft:15 }} onPress={() => navigation.navigate('Home')}/>
+        <Animated.View style={[styles.header, {backgroundColor: headColor2}]}>
+          <Button icon={{ name: 'arrow-back', type: 'material', size:30, style: { color: "white", } }}
+                  buttonStyle={styles.backButton} onPress={() => this.props.navigation.navigate('Home')}/>
 
-<Animated.Text style={{ backgroundColor: 'transparent', position: "absolute", top: 0, left: 50, padding:20, paddingLeft:15,color:displayColor, fontWeight:"bold" }}>Maverick 😎</Animated.Text>
-  <SimpleLineIcons size={20} name="options-vertical" style={{ color: "white", position: "absolute", top: 20, right: 20 }}/>
-</Animated.View>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this.renderRow.bind(this)}
-          renderScrollComponent={this.renderScroll.bind(this)}
-        />
-        <Animated.View
-          style={{
-            top: -height + 100,
-            zIndex: 2,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "yellow",
-            width: 100,
-            alignSelf: "center",
-            transform: [
-              { translateY: hamovY },
-              { translateX: hamovX },
-              { rotate: harot }
-            ]
-          }}
-        >
-          
+          <Animated.Text style={[styles.headerName, {color:displayColor}]}>Maverick 😎</Animated.Text>
+          <SimpleLineIcons size={20} name="options-vertical" style={styles.menuIcon}/>
         </Animated.View>
-        <Animated.View
-          style={{
-            position: "absolute",
-            height: 380,
-            borderColor:"red",
-            borderWidth:0,
-            width: width,
-            top: 0,
-            backgroundColor: headColor,
-            justifyContent: "flex-end",
-            flexDirection: "column",
-            transform: [{ translateY: headMov }]
-          }}
-        >
 
-<View style={{flex:1,borderColor:"yellow", borderWidth:0, }}>
+        <TweetList
+        navigation={this.props.navigation}
+        renderScrollComponent={this.renderScroll.bind(this)}
+        />
 
-<View style={{flex:0.25,borderColor:"red", borderWidth:0}}>
-  <Image style={[StyleSheet.absoluteFill,{resizeMode:"cover"}]} source={userBannerImage}/>
-</View>
-<View style={{flex:0.75,borderColor:"blue", flexDirection:"column", borderWidth:0}}>
-  <View style={{borderColor:"red", flexDirection:"row", borderWidth:0, justifyContent:"space-between", padding:10, paddingLeft:15, paddingRight:15  }}>
-    <Image
-        onPress={() => this.props.navigation.navigate('DrawerClose')}
-        source={userImage}
-        style={{ width: 70, height: 70, borderRadius: 55,zIndex: 1000000000000, borderWidth: 0, borderColor: "black", resizeMode:"cover" }}/>
-  
-                  <Button
-                buttonStyle={{
-                  backgroundColor: "transparent",
-                  borderColor: "rgb(29, 161, 242)",
-                  borderWidth: 1,
-                  borderRadius: 25,
-                  padding: 6,
-                  width: 100
-                }}
-                onPress={() => navigation.dispatch(NavigationActions.back())}
-                title="Edit Profile"
-                textStyle={{
-                  color: "rgb(136, 153, 166)",
-                  fontWeight: "bold",
-                  backgroundColor: "transparent",
-                  fontSize: 14
-                }}
-              />
-    
-  </View>
-  <View style={{borderColor:"red", flexDirection:"column", borderWidth:0, justifyContent:"space-between", paddingLeft:15  }}>
-    <Text style={{color: "white",fontWeight: "bold",fontSize: 18}}>Maverick 😎</Text>
-    <Text style={{ color: "rgb(136, 153, 166)", fontWeight: "bold", fontSize: 14 }}>@Gbenga</Text>
-  </View>
-  <View style={{ flexDirection:"column",  justifyContent:"space-between", padding:5, paddingLeft:15   }}>
-    <Text style={{
-        color: "white"
-      }}>Software Architect | CTO @betagrade & 360NEEDS GROUP Software Architect | CTO @betagrade & 360NEEDS GROUP</Text>
-  </View>
-  <View style={{flexDirection:"row", justifyContent:"flex-start", padding:5, paddingLeft:15  }}>
-          <SimpleLineIcons
-          name={'location-pin'}
-          size={14}
-          color={'rgb(136, 153, 166)'}>
-            <Text style={{color:"rgb(29, 161, 242)", fontSize:14, marginLeft:15}}> Lagos, Nigeria</Text>
-          </SimpleLineIcons>
-          <Ionicons
-          name={'ios-link-outline'}
-          size={18}
-          style={{marginLeft:15}}
-          color={'rgb(136, 153, 166)'}>
-          
-            <Text style={{color:"rgb(29, 161, 242)", fontSize:14, marginLeft:15}}> medium.com/@gbenga</Text>
-          </Ionicons>
-  </View>
-  <View style={{ flexDirection:"row", justifyContent:"flex-start", padding:5, paddingLeft:15   }}>
-      <MaterialCommunityIcons
-      name={'airballoon'}
-      size={14}
-      
-      color={'rgb(136, 153, 166)'}/>
-      <Text style={{color:"rgb(136, 153, 166)", fontSize:14, marginLeft:10}}>Born on June 21</Text>
-  </View>
-  <View style={{flexDirection:"row",justifyContent:"flex-start", padding:5, paddingLeft:15   }}>
-      <View style={{ flexDirection:"row", justifyContent:"flex-start", marginRight:15}}>
-        <Text style={{ color: "white",fontWeight: "bold"}}>970</Text>
-        <Text style={{ color: "rgb(136, 153, 166)", fontWeight: "300", marginLeft:5}}>Following</Text>
-      </View>
-      <View style={{flexDirection:"row"}}>
-        <Text style={{color: "white",fontWeight: "bold"}}>1,325  </Text>
-        <Text
-          style={{
-          color: "rgb(136, 153, 166)",
-          fontWeight: "300",
-          marginLeft:0
-        }}>
-          Followers</Text>
-      </View>
-  </View>
-</View>
+        <Animated.View style={[styles.topContainer, {transform: [ { translateY: hamovY }, { translateX: hamovX }, { rotate: harot } ]}]}>
+          </Animated.View>
+              <Animated.View style={[styles.banner, {backgroundColor: headColor,transform: [{ translateY: headMov }]}]}>
+                <View style={styles.topBannerContainer}>
+                  <View style={styles.bannerImageContainer}>
+                    <Image style={[StyleSheet.absoluteFill,{resizeMode:"cover"}]} source={userBannerImage}/>
+                  </View>
+                  <View style={styles.info}>
+                    <View style={styles.infoTop}>
+                      <Image
+                          onPress={() => this.props.navigation.navigate('DrawerClose')}
+                          source={userImage}
+                          style={styles.userPhoto}/>
+                    
+                      <Button
+                        buttonStyle={styles.editProfileButton}
+                        onPress={() => navigation.dispatch(NavigationActions.back())}
+                        title="Edit Profile"
+                        textStyle={styles.editProfileButtonText}
+                      />                     
+                    </View>
+                    <View style={styles.nameAndHandle}>
+                        <Text style={styles.name}>Maverick 😎</Text>
+                        <Text style={styles.handle}>@Gbenga</Text>
+                    </View>
+                    <View style={styles.bio}>
+                      <Text style={{
+                          color: "white"
+                        }}>Software Architect | CTO @betagrade & 360NEEDS GROUP Software Architect | CTO @betagrade & 360NEEDS GROUP</Text>
+                    </View>
+                    <View style={styles.cityAndLinkContainer}>
+                      <SimpleLineIcons
+                      name={'location-pin'}
+                      size={14}
+                      color={'rgb(136, 153, 166)'}>
+                        <Text style={styles.city}> Lagos, Nigeria</Text>
+                      </SimpleLineIcons>
+                      <Ionicons
+                      name={'ios-link-outline'}
+                      size={18}
+                      style={{marginLeft:15}}
+                      color={'rgb(136, 153, 166)'}>                     
+                        <Text style={styles.link}> medium.com/@gbenga</Text>
+                      </Ionicons>
+                    </View>
+                    <View style={styles.dobContainer}>
+                        <MaterialCommunityIcons
+                        name={'airballoon'}
+                        size={14}     
+                        color={'rgb(136, 153, 166)'}/>
+                        <Text style={styles.dob}>Born on June 21</Text>
+                    </View>
+                    <View style={styles.followingAndFollowersContainer}>
+                        <View style={styles.followingContainer}>
+                          <Text style={styles.followingCount}>970</Text>
+                          <Text style={styles.followingText}>Following</Text>
+                        </View>
+                        <View style={styles.followersContainer}>
+                          <Text style={styles.followersCount}>1,325  </Text>
+                          <Text style={styles.followersText}> Followers</Text>
+                        </View>
+                    </View>
+                  </View>
 
-</View>
+                </View>
         </Animated.View>
       </View>
     );
@@ -285,3 +235,161 @@ export default class ScrollSwagger extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "rgb(20, 29, 38)"
+  },
+  header: {
+    minHeight: 60,
+    flex: 0.1,
+    borderColor: "red",
+    borderWidth: 0,
+    zIndex: 1000000000
+  },
+  backButton: {
+    backgroundColor: "transparent",
+    position: "absolute",
+    top: -5,
+    left: -10,
+    padding: 20,
+    paddingLeft: 15
+  },
+  headerName: {
+    backgroundColor: "transparent",
+    position: "absolute",
+    top: 0,
+    left: 50,
+    padding: 20,
+    paddingLeft: 15,
+    fontWeight: "bold"
+  },
+  menuIcon: {
+    color: "white",
+    position: "absolute",
+    top: 20,
+    right: 20
+  },
+  topContainer: {
+    top: -height + 100,
+    zIndex: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "yellow",
+    width: 100,
+    alignSelf: "center"
+  },
+  banner: {
+    position: "absolute",
+    height: 380,
+    borderColor: "red",
+    borderWidth: 0,
+    width: width,
+    top: 0,
+    justifyContent: "flex-end",
+    flexDirection: "column"
+  },
+  topBannerContainer: {
+    flex: 1,
+    borderColor: "yellow",
+    borderWidth: 0
+  },
+  bannerImageContainer: {
+    flex: 0.25,
+    borderColor: "red",
+    borderWidth: 0
+  },
+  info: {
+    flex: 0.75,
+    borderColor: "blue",
+    flexDirection: "column",
+    borderWidth: 0
+  },
+  infoTop: {
+    borderColor: "red",
+    flexDirection: "row",
+    borderWidth: 0,
+    justifyContent: "space-between",
+    padding: 10,
+    paddingLeft: 15,
+    paddingRight: 15
+  },
+  editProfileButton: {
+    backgroundColor: "transparent",
+    borderColor: "rgb(29, 161, 242)",
+    borderWidth: 1,
+    borderRadius: 25,
+    padding: 6,
+    width: 100
+  },
+  editProfileButtonText: {
+    color: "rgb(136, 153, 166)",
+    fontWeight: "bold",
+    backgroundColor: "transparent",
+    fontSize: 14
+  },
+  nameAndHandle: {
+    borderColor: "red",
+    flexDirection: "column",
+    borderWidth: 0,
+    justifyContent: "space-between",
+    paddingLeft: 15
+  },
+  name: { color: "white", fontWeight: "bold", fontSize: 18 },
+  handle: { color: "rgb(136, 153, 166)", fontWeight: "bold", fontSize: 14 },
+  bio: {
+    flexDirection: "column",
+    justifyContent: "space-between",
+    padding: 5,
+    paddingLeft: 15
+  },
+  cityAndLinkContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    padding: 5,
+    paddingLeft: 15
+  },
+  city: { color: "rgb(29, 161, 242)", fontSize: 14, marginLeft: 15 },
+  link: { color: "rgb(29, 161, 242)", fontSize: 14, marginLeft: 15 },
+  dobContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    padding: 5,
+    paddingLeft: 15
+  },
+  dob: { color: "rgb(136, 153, 166)", fontSize: 14, marginLeft: 10 },
+  followingAndFollowersContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    padding: 5,
+    paddingLeft: 15
+  },
+  followingContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    marginRight: 15
+  },
+  followingCount: { color: "white", fontWeight: "bold" },
+  followingText: {
+    color: "rgb(136, 153, 166)",
+    fontWeight: "300",
+    marginLeft: 5
+  },
+  followersContainer: { flexDirection: "row" },
+  followersCount: { color: "white", fontWeight: "bold" },
+  followersText: {
+    color: "rgb(136, 153, 166)",
+    fontWeight: "300",
+    marginLeft: 0
+  },
+  userPhoto: {
+    width: 70,
+    height: 70,
+    borderRadius: 55,
+    zIndex: 1000000000000,
+    borderWidth: 0,
+    borderColor: "black",
+    resizeMode: "cover"
+  }
+});

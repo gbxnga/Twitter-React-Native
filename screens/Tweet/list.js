@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {ScrollView, ListView, Text, ActivityIndicator, StyleSheet, View} from 'react-native'
 import Tweet from './index'
 import data from './tweets.json'
+import axios from "axios"
 export default class TweetsList extends Component  {
 
     constructor(props){
@@ -19,15 +20,26 @@ export default class TweetsList extends Component  {
         let ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         })
-
-        // simulate remote data fetch by delaying render for 5ms
-       setTimeout( () => this.setState({dataSource: ds.cloneWithRows(data), data: true}),
-       500)
+        axios.get(`https://randomuser.me/api/?results=10`)
+        .then(response => {
+          console.log(response)
+          return response
+        })
+        .then(json => {
+    
+          console.log(json)
+          const {results} = json.data
+          console.log(results)
+          this.setState({dataSource: ds.cloneWithRows(results), data: true})
+          
+        })
+        .catch((error) => {
+            console.log(` ${error}`)
+        });
 
        console.log(this.props.navigation)
     }
     handleScroll(event) {
-        //alert('ehykjlhk;lj')
 
         console.log('child', event.nativeEvent.contentOffset.y);
         if (event.nativeEvent.contentOffset.y == 0){
@@ -53,6 +65,7 @@ export default class TweetsList extends Component  {
              
                 { this.state.data ? 
                     <ListView
+                    renderScrollComponent={this.props.renderScrollComponent}
                     
                     dataSource={this.state.dataSource}
                     renderRow={this.renderRow}
@@ -72,7 +85,7 @@ export default class TweetsList extends Component  {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     horizontal: {
       flexDirection: 'row',

@@ -17,6 +17,8 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 import ReplyComponent from './ReplyComponent'
 
+import randomWords from 'random-words'
+
 import TweetList from './list'
 export default class BoldTweet extends React.Component {
 
@@ -24,7 +26,7 @@ export default class BoldTweet extends React.Component {
     super()
     this.state = {
       touched: false,
-      tweet:"Everyone iss talking about what might have been wrong in Kate Spade’s life. Depression doesn’t work like that. There doesn’t have to be anything wrong to feel like everything is wrong.",
+      tweet: randomWords({min: 18, max: 40}).join(" "),
       retweets:Math.floor((Math.random() * 100) + 1),
       likes:Math.floor((Math.random() * 10) + 1),
       name:"Maverick 😎 ",
@@ -77,9 +79,7 @@ export default class BoldTweet extends React.Component {
     const {touched, tweet, retweets, likes, name, handle, time, retweetedBy, retweeted, liked} = this.state
 
     return (
-    <View style={{flex:1,justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgb(27, 40, 54)',}}>
+    <View style={styles.container}>
              
         <ScrollView>
             <TouchableHighlight onPressIn={() => this.tweetPressed(true)} onPressOut={() => this.tweetPressed()}>
@@ -161,8 +161,7 @@ export default class BoldTweet extends React.Component {
 
 }
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'rgb(27, 40, 54)',
-      },
+    container: {flex:1,justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgb(27, 40, 54)',}
 })
