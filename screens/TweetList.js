@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {ScrollView, ListView, Text, ActivityIndicator, StyleSheet, View} from 'react-native'
-import Tweet from './index'
-import data from './tweets.json'
+import Tweet from './Tweet'
+//import data from './tweets.json'
 import axios from "axios"
 export default class TweetsList extends Component  {
 
@@ -65,10 +65,10 @@ export default class TweetsList extends Component  {
              
                 { this.state.data ? 
                     <ListView
-                    renderScrollComponent={this.props.renderScrollComponent}
-                    
-                    dataSource={this.state.dataSource}
-                    renderRow={this.renderRow}
+                        renderScrollComponent={this.props.renderScrollComponent}
+                        
+                        dataSource={this.state.dataSource}
+                        renderRow={this.renderRow}
                     /> 
                     :             
                     <View style={[styles.container, styles.horizontal]}>                
@@ -85,11 +85,12 @@ export default class TweetsList extends Component  {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      justifyContent: 'center',
+      justifyContent: 'center'
     },
     horizontal: {
       flexDirection: 'row',
-      justifyContent: 'space-around',
+      alignItems:"center",
+      justifyContent: 'center',
       padding: 10
     }
   })

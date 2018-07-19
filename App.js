@@ -25,18 +25,17 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import Feather from 'react-native-vector-icons/Feather'
+import Entypo from 'react-native-vector-icons/Entypo'
 
 import LoadingScreen from './screens/Loading'
 
 import Home from './screens/Home'
-import DrawerContainer from './DrawerContainer'
+import DrawerContainer from './screens/DrawerContainer'
 
 import Tweet from './screens/Tweet'
-import BoldTweet from './screens/Tweet/bold'
-import ProfileStack from './screens/Profile/stack'
+import BoldTweet from './screens/ViewTweet'
+import ProfileStack from './screens/Profile'
 
-import Orientation from 'react-native-orientation'
-import Notification from './screens/Notification'
 
 
 const instructions = Platform.select({
@@ -52,15 +51,7 @@ type Props = {};
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
+          <Entypo name={'twitter'} size={70} style={{color: 'rgb(29, 161, 242)'}} />
       </View>
     );
   }
@@ -202,6 +193,7 @@ const Tabs =  createTabNavigator({
     screen: App,
     navigationOptions: {
       tabBarLabel: 'App',
+      //tabBar
     }
   },
   Notification: {
@@ -217,9 +209,41 @@ const Tabs =  createTabNavigator({
     }
   },
   
-}, {
-  tabBarPosition: 'top',
-  tabBarComponent: (props) => <CustomTabComponent {...props}/>,
+}, 
+{
+  navigationOptions: ({ navigation }) => ({
+    tabBarIcon: ({ focused, tintColor }) => {
+      const { routeName } = navigation.state;
+      
+      switch (routeName){
+
+        case "Home":
+          return <Octicons name={'home'} size={30} color={ focused ? 'rgb(29, 161, 242)':'rgb(136, 153, 166)'} />
+        break;
+        case "Search":
+          return <EvilIcons name={'search'} size={35} color={ focused ?  'rgb(29, 161, 242)':'rgb(136, 153, 166)'} />
+        break;
+        case "Notification":
+          return <Ionicons
+                  name={'ios-notifications-outline'}
+                  size={30}
+                  style={{ color: focused ?  'rgb(29, 161, 242)':'rgb(136, 153, 166)' }}
+                />
+        break;
+        case "DM":
+          return <FontAwesome
+                  name={'envelope-o'}
+                  size={26}
+                  style={{ color: focused ? 'rgb(29, 161, 242)':'rgb(136, 153, 166)' }}
+                />
+        break;
+      }
+    },
+  }),
+
+
+  tabBarPosition: 'bottom',
+  //tabBarComponent: (props) => <CustomTabComponent {...props}/>,
   animationEnabled: true,
   tabBarOptions: {
     showIcon: true,
@@ -231,7 +255,7 @@ const Tabs =  createTabNavigator({
     style: {
         borderWidth: 0,
         position:'absolute',
-        top:60,
+        bottom:0,
         left:0,
         width:'100%',
         backgroundColor: 'rgb(27, 42, 51)',
@@ -304,12 +328,11 @@ class HomeTabsWithTweetButtonWrapper extends Component{
           elevation: 4,
           backgroundColor: 'rgb(29, 161, 242)',
           borderRadius: 50,
-          padding: 30,
+          padding: 25,
           margin: 15,
           position: "absolute",
-          bottom: 45,
+          bottom: 50,
           right: 0,
-          borderRadius: 50,
           
         }}
           onPress={() => this.props.navigation.navigate('Tweet')}>
@@ -318,9 +341,9 @@ class HomeTabsWithTweetButtonWrapper extends Component{
             size={26}
             style={{
             position: 'absolute',
-            left: 14,
+            left: 12,
             color: 'white',
-            top: 15
+            top: 12
           }}/>
           <MaterialCommunityIcons
             name={'feather'}
@@ -328,8 +351,8 @@ class HomeTabsWithTweetButtonWrapper extends Component{
             style={{
             color: 'white',
             position: 'absolute',
-            left: 23,
-            top: 17
+            left: 20,
+            top: 14
           }}/>
         </TouchableOpacity>}
       </View>
@@ -393,106 +416,18 @@ const Site = createStackNavigator({
   },
 
 })
-class ExampleComponent extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      text: "No movement",
-      bottom: 0,
-      response: "",
-      pan: new Animated.ValueXY()
-    };
-    this._panResponder = PanResponder.create({
-      // Ask to be the responder:
-      onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => true,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
 
-      onPanResponderGrant: (evt, gestureState) => {
-        // The gesture has started. Show visual feedback so the user knows
-        // what is happening!
-        this.state.pan.setOffset({
-          x: this.state.pan.x._value,
-          y: this.state.pan.y._value
-        });
-        this.state.pan.setValue({ x: 0, y: 0 });
-        this.setState({ text: "Oti ya o!" });
-
-        // gestureState.d{x,y} will be set to zero now
-      },
-      onPanResponderMove:
-        // The most recent move distance is gestureState.move{X,Y}
-
-        // The accumulated gesture distance since becoming responder is
-        // gestureState.d{x,y}
-        Animated.event([null, { dx: this.state.pan.x, dy: this.state.pan.y }]),
-      onPanResponderTerminationRequest: (evt, gestureState) => true,
-      onPanResponderRelease: (evt, gestureState) => {
-        // The user has released all touches while this view is the
-        // responder. This typically means a gesture has succeeded
-        // Flatten the offset to avoid erratic behavior
-        this.state.pan.flattenOffset();
-        this.setState({ text: "No gestures ", bottom: 0 });
-      },
-      onPanResponderTerminate: (evt, gestureState) => {
-        // Another component has become the responder, so this gesture
-        // should be cancelled
-      },
-      onShouldBlockNativeResponder: (evt, gestureState) => {
-        // Returns whether this component should block native components from becoming the JS
-        // responder. Returns true by default. Is currently only supported on android.
-        return true;
-      }
-    });
-  }
-
-  render() {
-    // Destructure the value of pan from the state
-    let { pan } = this.state;
-
-    // Calculate the x and y transform from the pan value
-    let [translateX, translateY] = [pan.x, pan.y];
-
-    // Calculate the transform property and set it as a value for our style which we add below to the Animated.View component
-    let imageStyle = { transform: [{ translateX }, { translateY }] };
-
-    return (
-      <View style={{ flex: 1 }}>
-        <Animated.View
-          style={[
-            {
-              flex: 1,
-              borderColor: "red",
-              borderWidth: 2,
-              height: 300,
-              width: "100%",
-              position: "absolute",
-              bottom: this.state.bottom
-            },
-            imageStyle
-          ]}
-          {...this._panResponder.panHandlers}
-        >
-          <Text>{this.state.text}</Text>
-          <Text>{this.state.response}</Text>
-        </Animated.View>
-      </View>
-    );
-  }
-}
 const  AppStack = createDrawerNavigator(
   { 
     Home: HomeWithCreateTweetScreenStack,
     Profile: ProfileStack,
     Site: Site,
-    AnimationPage: ExampleComponent,
   },
   {
     contentComponent: ({navigation}) => <DrawerContainer  navigation={navigation}/>
   }
 );
-const AppNavigator = SwitchNavigator(
+export default AppNavigator = SwitchNavigator(
   {
     AuthLoading: LoadingScreen,
     App: AppStack,
@@ -501,101 +436,13 @@ const AppNavigator = SwitchNavigator(
     initialRouteName: 'AuthLoading',
   }
 );
-export default class MainApp extends React.Component{
 
-  constructor(){
-    super()
-    this.state = {
-      orientation: null,
-      notify: false,
-      message: 'Hello, Awayhu ?'
-    }
-  }
-
-  componentWillMount(){
-    //const orientation = Orientation.getInitialOrientation()
-    //this.setState({orientation})
-  }
-  componentDidMount(){
-    //Orientation.addOrientationListener(this.onOrientationChange)
-  }
-  componentWillUnmount(){
-    //Orientation.removeOrientationListener(this.onOrientationChange)
-  }
-  onOrientationChange = orientation => {
-    //this.setState({orientation})
-    //AlertAndroid.alert(orientation)
-  }
-  onToggleNotification = () => {
-    
-    this.setState({
-      notify: !this.state.notify
-    })
-
-  }
-
-  render(){
-    const {message} = this.props;
-    const notify = this.state.notify ?
-    <Notification
-      autohide
-      message={message}
-      onClose={this.onToggleNotification}
-      />
-    : null
-
-    return (
-      <View style={{flex:1}}>
-      <AppNavigator toggleNotification={this.onToggleNotification}/>
-      {notify}
-      </View>
-    )
-  }
-}
 
 const {width, height} = Dimensions.get('window')
 const cloudImage = require('./assets/images/avatar.png');
 const imageWidth = 80
 
-class SimpleAnimations extends React.Component{
-  constructor(){
-    super()
-
-  }
-
-  componentWillMount(){
-    this.animatedValue = new Animated.Value();
-
-  }
-  componentDidMount(){
-    this.startAnimation()
-  }
-  startAnimation(){
-    this.animatedValue.setValue(width); // resetting the initial value every time we call this method
-    Animated.timing(
-      this.animatedValue,
-      {
-        toValue: -imageWidth,
-        duration: 4000,
-        easing: Easing.linear
-      }
-    ).start(()=> this.startAnimation()); // we created a loop: when image reaches the end, the animation starts again
-
-  }
-  render(){
-
-    return(
-      <Animated.Image
-        style={ {left: this.animatedValue, position:"absolute",top:height/3,width:imageWidth, height:imageWidth}}
-        source={cloudImage}
-      />
-    )
-
-  }
-
-}
-
 
 //YellowBox.ignoreWarnings(['Warning: Method `jumpToIndex` is deprecated', 'Module RCTImageLoader'])
 console.disableYellowBox = true;
-AppRegistry.registerComponent('Twitter', () => MainApp);
+AppRegistry.registerComponent('Twitter', () => AppNavigator);

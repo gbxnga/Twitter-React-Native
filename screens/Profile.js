@@ -8,9 +8,10 @@ import {
   Dimensions, Image, StyleSheet
 } from "react-native";
 const { height, width } = Dimensions.get("window");
+import {createStackNavigator} from 'react-navigation'
 
-import data from '../Tweet/tweets.json'
-import Tweet from '../Tweet/index'
+//import data from './Tweet/tweets.json'
+import Tweet from './Tweet'
 
 import { Button, Card } from "react-native-elements";
 import { StackNavigator, NavigationActions } from "react-navigation";
@@ -33,9 +34,9 @@ const IMG_HEIGHT = 100;
 const NAVBAR_HEIGHT = 64;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
-import TweetList from '../Tweet/list'
+import TweetList from './TweetList'
 
-export default class ScrollSwagger extends Component {
+export default class Profile extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({
@@ -43,22 +44,6 @@ export default class ScrollSwagger extends Component {
     });
     this.state = {
       scrollY: new Animated.Value(0),
-      dataSourcee: ds.cloneWithRows([
-        "Dummy",
-        "data",
-        "Dummy",
-        "data",
-        "Dummy",
-        "data",
-        "Dummy",
-        "data",
-        "Dummy",
-        "data",
-        "Dummy",
-        "data"
-      ]),
-      dataSource: ds.cloneWithRows(data),
-      data: false
     };
   }
   renderRoww(rowData) {

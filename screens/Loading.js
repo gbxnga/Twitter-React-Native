@@ -13,6 +13,8 @@ export default class LoadingScreen extends React.Component {
   }
 
   componentDidMount() {
+
+    /** Simulate asynchronus authentication for 0.5s */
     setTimeout(() => {
 
       this
